@@ -1,2 +1,2 @@
 pytest>=9.1.1,<10
-playwright>=1.51,<2
+playwright>=1.62.0,<2
