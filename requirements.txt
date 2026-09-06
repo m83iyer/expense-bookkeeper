@@ -10,5 +10,5 @@ requests>=2.34.2
 # Only invoked if you pick the Gmail capture (email_gmail) or Gmail confirmation
 # adapter at setup. Bundled in the default install so the advertised Gmail
 # path works out of the box; harmless if you never use Gmail.
-google-auth-oauthlib>=1.4.0
+google-auth-oauthlib>=1.4.1
 google-api-python-client>=2.198.0
