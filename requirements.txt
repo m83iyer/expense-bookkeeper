@@ -11,4 +11,4 @@ requests>=2.34.2
 # adapter at setup. Bundled in the default install so the advertised Gmail
 # path works out of the box; harmless if you never use Gmail.
 google-auth-oauthlib>=1.4.0
-google-api-python-client>=2.198.0
+google-api-python-client>=2.200.0
