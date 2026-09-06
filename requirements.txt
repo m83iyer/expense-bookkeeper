@@ -1,7 +1,7 @@
 # expense-bookkeeper — runtime dependencies
 # Python 3.10+
 gspread>=6.2.1
-google-auth>=2.56.0
+google-auth>=2.57.0
 PyYAML>=6.0.3
 python-dateutil>=2.9.0.post0
 requests>=2.34.2
