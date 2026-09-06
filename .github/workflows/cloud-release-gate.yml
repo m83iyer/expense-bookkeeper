@@ -1,0 +1,113 @@
+name: Cloud release gate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: cloud-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-release-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12", "3.14"]
+    steps:
+      - name: Check out the exact candidate
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install runtime and audit dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt -r requirements-dev.txt pip-audit
+      - name: Run the project's exhaustive cloud test entrypoint
+        run: bash scripts/cloud_test.sh
+      - name: Capture and verify launch visuals
+        if: matrix.python-version == '3.12'
+        run: |
+          python -m playwright install --with-deps chromium
+          python scripts/capture_moneta_demo.py --output cloud-validation/screenshots
+      - name: Retain version-specific evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: validation-python-${{ matrix.python-version }}-${{ github.sha }}
+          path: cloud-validation/
+          if-no-files-found: error
+          retention-days: 30
+
+  exact-sha-proof:
+    needs: full-release-validation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Download every version receipt
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: validation-python-*-${{ github.sha }}
+          path: cloud-release-proof/validation
+      - name: Write exact-SHA proof
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          root = pathlib.Path("cloud-release-proof/validation")
+          receipts = sorted(path for path in root.rglob("receipt.json"))
+          if len(receipts) != 3:
+              raise SystemExit(f"Expected three Python receipts, found {len(receipts)}")
+          evidence = []
+          for path in receipts:
+              payload = json.loads(path.read_text())
+              if payload.get("status") != "green" or payload.get("sha") != os.environ["GITHUB_SHA"]:
+                  raise SystemExit(f"Invalid receipt: {path}")
+              evidence.append({
+                  "python": payload["python"],
+                  "receipt": str(path.relative_to(root)),
+                  "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+              })
+          majors = sorted(".".join(item["python"].split(".")[:2]) for item in evidence)
+          if majors != ["3.10", "3.12", "3.14"]:
+              raise SystemExit(f"Unexpected Python evidence: {majors}")
+          visual_reports = sorted(root.rglob("visual-proof.json"))
+          if len(visual_reports) != 1:
+              raise SystemExit(f"Expected one visual proof, found {len(visual_reports)}")
+          visual = json.loads(visual_reports[0].read_text())
+          captures = visual.get("public_captures") or []
+          if visual.get("status") != "green" or len(captures) != 5:
+              raise SystemExit("Visual proof is incomplete")
+          for capture in captures:
+              path = visual_reports[0].parent / capture["file"]
+              if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != capture["sha256"]:
+                  raise SystemExit(f"Invalid screenshot proof: {path}")
+          pathlib.Path("cloud-release-proof/proof.json").write_text(
+              json.dumps({
+                  "schema": "expense_bookkeeper_cloud_release_v2",
+                  "status": "green",
+                  "sha": os.environ["GITHUB_SHA"],
+                  "python_versions": sorted(item["python"] for item in evidence),
+                  "evidence": evidence,
+                  "visual_proof": str(visual_reports[0].relative_to(root)),
+                  "public_screenshots": [item["file"] for item in captures],
+              }, indent=2) + "\n"
+          )
+          PY
+      - name: Retain authoritative release proof
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: cloud-release-proof-${{ github.sha }}
+          path: cloud-release-proof/
+          if-no-files-found: error
+          retention-days: 30

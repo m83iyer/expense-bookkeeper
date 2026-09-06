@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.expense-bookkeeper.dashboard</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__PYTHON__</string>
+    <string>__REPOSITORY__/cli.py</string>
+    <string>dashboard-serve</string>
+    <string>--config</string><string>__CONFIG__</string>
+    <string>--host</string><string>127.0.0.1</string>
+  </array>
+  <key>WorkingDirectory</key><string>__REPOSITORY__</string>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>StandardOutPath</key><string>__LOCAL_STATE__/dashboard.log</string>
+  <key>StandardErrorPath</key><string>__LOCAL_STATE__/dashboard-error.log</string>
+</dict>
+</plist>

@@ -1,0 +1,11 @@
+{
+  "schema": "codex_cloud_first_release_v1",
+  "production_branch": "main",
+  "workflow": "cloud-release-gate.yml",
+  "artifact_prefix": "cloud-release-proof-",
+  "require_exact_origin_sha": true,
+  "require_nonempty_cloud_artifact": true,
+  "local_full_suite_allowed": false,
+  "local_targeted_tests_require_ram_admission": true,
+  "continuous_log_streaming_allowed": false
+}

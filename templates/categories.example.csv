@@ -1,0 +1,29 @@
+Category,Subcategory,Active,Notes
+Groceries,Supermarket,TRUE,everyday groceries
+Groceries,Online Grocery,TRUE,online grocery delivery
+Dining,Cafe,TRUE,coffee + light food
+Dining,Restaurant,TRUE,sit-down dining
+Dining,Food Delivery,TRUE,Talabat / Deliveroo / Zomato
+Transport,Fuel,TRUE,petrol/gas
+Transport,Ride-Hailing,TRUE,Uber/Careem/etc.
+Transport,Public Transit,TRUE,metro/bus
+Transport,Tolls & Parking,TRUE,Salik/parking
+Shopping,Online Retail,TRUE,Amazon/Noon/etc.
+Shopping,Apparel,TRUE,clothes
+Shopping,Electronics,TRUE,gadgets
+Subscriptions,Streaming,TRUE,Netflix/Spotify/etc.
+Subscriptions,SaaS,TRUE,software
+Subscriptions,Cloud Storage,TRUE,iCloud/Google/Dropbox
+Utilities,Electricity & Water,TRUE,DEWA/equivalent
+Utilities,Mobile & Internet,TRUE,etisalat/du/equivalent
+Health,Pharmacy,TRUE,
+Health,Doctor & Clinic,TRUE,
+Health,Hospital,TRUE,
+Housing,Rent,TRUE,
+Housing,Maintenance,TRUE,
+Personal Care,Salon,TRUE,
+Personal Care,Gym,TRUE,
+Travel,Hotel,TRUE,
+Travel,Flight,TRUE,
+Gifts,Gifts,TRUE,outgoing gifts
+Misc,Other,TRUE,catch-all when nothing fits

@@ -1,0 +1,8 @@
+Description,Amount,Currency,Category,Subcategory,Cadence,Day_of_Month,Active,Card_Used,Person,Last_Posted,Notes
+Rent,8000,AED,Housing,Rent,monthly,1,TRUE,Bank Transfer,Household,,
+Househelp,1500,AED,Housing,Househelp,monthly,1,TRUE,Cash,Household,,
+Carwash,200,AED,Transport,Carwash,monthly,15,TRUE,Cash,Household,
+DEWA,400,AED,Utilities,Electricity & Water,monthly,5,TRUE,Bank Transfer,Household,,
+Internet,389,AED,Utilities,Internet & Phone,monthly,10,TRUE,Bank Transfer,Household,,
+School Bus,800,AED,Education,Transport,monthly,5,TRUE,Bank Transfer,Household,,
+Gym,250,AED,Health & Wellness,Gym,monthly,1,TRUE,Bank Transfer,Household,,

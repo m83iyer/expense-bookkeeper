@@ -1,0 +1,19 @@
+# Linux/Unix cron — recurring writer + weekly digest
+# Replace {USER} with your username and {SKILL_DIR} with the install path,
+# typically ~/.expense-bookkeeper/skill or wherever you cloned the repo.
+# Open your crontab with `crontab -e` and add the lines below.
+
+# RECURRING WRITER — daily 03:00 user-local. Posts due RECURRING rows to EXPENSES.
+0 3 * * *   /usr/bin/env python3 {SKILL_DIR}/scripts/recurring_writer.py --config /home/{USER}/.expense-bookkeeper/config.yaml >> /home/{USER}/.expense-bookkeeper/logs/recurring.log 2>&1
+
+# WEEKLY DIGEST — Monday 09:00 user-local. Queues a 7-day summary for the confirmation adapter.
+0 9 * * 1   /usr/bin/env python3 {SKILL_DIR}/scripts/weekly_digest.py --config /home/{USER}/.expense-bookkeeper/config.yaml >> /home/{USER}/.expense-bookkeeper/logs/digest.log 2>&1
+
+# Notes:
+#   - cron uses the system's local timezone. If your machine clock is set to UTC,
+#     adjust the hour fields. Most modern Linux distros keep system time in local
+#     unless you've explicitly used `timedatectl set-timezone UTC`.
+#   - The user must have a writable ~/.expense-bookkeeper/logs/ folder.
+#     Create it once: `mkdir -p ~/.expense-bookkeeper/logs`
+#   - To verify a job is scheduled: `crontab -l`
+#   - To see recent runs: `tail -f ~/.expense-bookkeeper/logs/recurring.log`

@@ -1,0 +1,7 @@
+{"raw": "AED 87.00 spent on WioCredit at AMAZON.AE on 29/04/2026", "expected": {"amount": 87.00, "currency": "AED", "merchant_raw": "AMAZON.AE", "card": "WioCredit"}}
+{"raw": "Charge of AED 12.50 at STARBUCKS DXB — 29 Apr 2026", "expected": {"amount": 12.50, "currency": "AED", "merchant_raw": "STARBUCKS DXB"}}
+{"raw": "AED 250 at LULU HYPER on 28-04-2026", "expected": {"amount": 250.0, "currency": "AED", "merchant_raw": "LULU HYPER"}}
+{"raw": "USD 14.99 NETFLIX — 27 Apr 2026", "expected": {"amount": 14.99, "currency": "USD", "merchant_raw": "NETFLIX"}}
+{"raw": "150.00 AED Carrefour MOE", "expected": {"amount": 150.0, "currency": "AED", "merchant_raw": "Carrefour MOE"}}
+{"raw": "AED 4.50 spent on Citi at PARKING METER 7723 on 28/04/2026", "expected": {"amount": 4.50, "currency": "AED", "merchant_raw": "PARKING METER 7723", "card": "Citi"}}
+{"raw": "Refund: AED 87.00 from AMAZON.AE on 30/04/2026", "expected": {"amount": 87.00, "currency": "AED", "merchant_raw": "AMAZON.AE", "txn_type": "Refund"}}

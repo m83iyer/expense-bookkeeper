@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "validated_at": "2026-07-30T09:23:43Z",
+  "source_commit": "2e69db9ffd7937a04cf1e6786e6b7c1dcb46801a",
+  "branch": "expert-revision-v0.4.1-evidence-cards",
+  "ram_admission_wrapper": "~/.local/libexec/macmini_ram_admission.py",
+  "checks": [
+    {
+      "name": "clean_clone_baseline",
+      "command": "env PYTHONPATH=scripts python3 -m pytest tests -q",
+      "result": "passed",
+      "tests_passed": 107,
+      "duration_seconds": 1.61
+    },
+    {
+      "name": "asset_integrity_and_claim_parity",
+      "command": "env PYTHONPATH=scripts python3 -m pytest tests/test_social_evidence_cards.py -q",
+      "result": "passed",
+      "tests_passed": 4,
+      "duration_seconds": 0.18
+    },
+    {
+      "name": "full_suite_with_new_asset_tests",
+      "command": "env PYTHONPATH=scripts python3 -m pytest tests -q",
+      "result": "passed",
+      "tests_passed": 111,
+      "duration_seconds": 1.70
+    },
+    {
+      "name": "builder_behavior_and_hash_check",
+      "command": "env PYTHONPATH=scripts python3 assets/social/expense-bookkeeper-v0.4.1/build_cards.py --check",
+      "result": "passed",
+      "assets_checked": 2
+    },
+    {
+      "name": "repeat_render_determinism",
+      "result": "passed",
+      "local_repeat_sha_matches": 2,
+      "local_repeat_sha_mismatches": 0
+    },
+    {
+      "name": "full_size_visual_inspection",
+      "result": "passed",
+      "assets_inspected": 2,
+      "inspection_record": "visual-qa.json"
+    }
+  ],
+  "safety_boundary": "Synthetic data and SSD temporary state only. No live ledger, credential, relay, ~/.expense-tracker, or ~/.expense-bookkeeper state was read or changed.",
+  "status": "passed"
+}

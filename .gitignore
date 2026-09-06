@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+
+# User local state — must NEVER ship in the repo
+~/.expense-bookkeeper/
+.expense-bookkeeper/
+config.yaml
+credentials.json
+*.json.local
+.env
+.env.*
+!.env.example
+token.json
+*.token.json
+google-service-account.json
+client_secret*.json
+*.sqlite
+*.sqlite3
+*.db
+*.bak
+*.backup
+*.log
+state/
+status/
+reports/
+privacy-audit-report.json
+
+# Build artefacts
+/dist/
+/build/
+*.zip
+.codebase-memory/
+.ai/

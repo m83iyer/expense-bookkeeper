@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#eef7ef">
+  <title>Moneta | Expense intelligence</title>
+  <link rel="icon" href="data:,">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="rail">
+      <a class="brand" href="/?view=overview" aria-label="Moneta overview">
+        <span class="brand-mark" aria-hidden="true">M</span>
+        <span><b>Moneta</b><small>Expense intelligence</small></span>
+      </a>
+
+      <nav class="view-nav" aria-label="Dashboard views">
+        <button class="view-link active" data-view="overview"><span>01</span><b>Overview</b><small>What changed?</small></button>
+        <button class="view-link" data-view="drivers"><span>02</span><b>Drivers</b><small>What caused it?</small></button>
+        <button class="view-link" data-view="commitments"><span>03</span><b>Commitments</b><small>What comes next?</small></button>
+        <button class="view-link" data-view="ledger"><span>04</span><b>Evidence</b><small>Which transactions?</small></button>
+      </nav>
+
+      <div class="rail-proof">
+        <span class="proof-dot" aria-hidden="true"></span>
+        <div><b id="systemStatus">Local and private</b><small id="systemDetail">Derived from your ledger</small></div>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="topbar-title">
+          <p class="eyebrow">MONETA / EXPENSE BOOKKEEPER 2.0 <span id="demoBadge" class="demo-badge" hidden>SYNTHETIC DEMO</span></p>
+          <h1 id="viewQuestion">Where did spending change?</h1>
+          <p id="viewAnswer" class="view-answer">Reading the selected period against a complete comparison.</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="currency-block">
+            <span>DISPLAY CURRENCY</span>
+            <div id="currencyToggle" class="currency-toggle" role="group" aria-label="Display currency"></div>
+          </div>
+          <button id="refreshData" class="refresh-button" type="button">Refresh data</button>
+        </div>
+      </header>
+
+      <section class="scope-bar" aria-label="Analysis scope">
+        <label><span>Period ending</span><select id="monthFilter"></select></label>
+        <label><span>Window</span><select id="rangeFilter">
+          <option value="1">1 month</option>
+          <option value="3" selected>3 months</option>
+          <option value="6">6 months</option>
+          <option value="12">12 months</option>
+        </select></label>
+        <div id="categoryFilter" class="multi-slicer" data-label="Category"></div>
+        <div id="subcategoryFilter" class="multi-slicer" data-label="Subcategory"></div>
+        <div id="merchantFilter" class="multi-slicer" data-label="Merchant"></div>
+        <label><span>Compare</span><select id="comparisonFilter">
+          <option value="previous">Previous period</option>
+          <option value="year">Same period last year</option>
+        </select></label>
+        <button id="resetFilters" class="reset-button" type="button">Reset</button>
+      </section>
+
+      <div id="loadingState" class="loading-state" role="status" aria-live="polite">Reading the local ledger…</div>
+      <div id="errorState" class="error-state" role="alert" hidden></div>
+
+      <main>
+        <section class="view active" data-view-panel="overview" aria-labelledby="overviewTitle">
+          <h2 id="overviewTitle" class="sr-only">Expense overview</h2>
+          <div class="period-line">
+            <span id="periodLabel">Selected period</span>
+            <b id="scopeLabel">All spending</b>
+            <span id="freshness">Awaiting local sync</span>
+          </div>
+
+          <section class="metric-ribbon" aria-label="Period summary">
+            <article class="metric-primary">
+              <span>SELECTED SPEND</span>
+              <strong id="periodSpend">—</strong>
+              <p id="periodChange">Comparison unavailable</p>
+            </article>
+            <article><span>MONTHLY RUN RATE</span><strong id="monthlyAverage">—</strong><p id="monthlyChange">Across selected months</p></article>
+            <article><span>TRANSACTIONS</span><strong id="transactionCount">—</strong><p id="dailyAverage">— per spending day</p></article>
+            <article><span>YEAR-ON-YEAR</span><strong id="yearChange">—</strong><p id="yearBaseline">Same period last year</p></article>
+          </section>
+
+          <section id="insightBrief" class="insight-brief" aria-label="Deterministic findings"></section>
+
+          <div class="overview-grid">
+            <article class="analysis-panel trend-panel">
+              <header class="panel-header">
+                <div><p class="eyebrow">MOMENTUM</p><h3>How the monthly run rate moved</h3><p id="trendCaption">Twelve observed months, with exact values on every point.</p></div>
+                <div class="chart-key"><span class="key-current">Selected</span><span class="key-compare">Comparison</span></div>
+              </header>
+              <div class="chart-frame"><svg id="trendChart" viewBox="0 0 960 360" role="img" aria-label="Monthly expense trend"></svg></div>
+              <div id="trendReadout" class="chart-readout"></div>
+            </article>
+
+            <article class="analysis-panel composition-panel">
+              <header class="panel-header">
+                <div><p class="eyebrow">ALLOCATION</p><h3>Where the money went</h3><p>Ranked categories, reconciled to selected spend.</p></div>
+              </header>
+              <div id="compositionChart" class="composition-chart"></div>
+              <p id="compositionNote" class="panel-note"></p>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view-panel="drivers" aria-labelledby="driversTitle" hidden>
+          <div class="view-heading">
+            <div><p class="eyebrow">ROOT-CAUSE ANALYSIS</p><h2 id="driversTitle" class="sr-only">What caused the movement?</h2><p id="driverSubtitle">Every bar opens the transactions behind it.</p></div>
+            <div class="driver-total"><span id="driverComparisonLabel">Previous period</span><b id="driverDelta">—</b><small id="driverDeltaPct">—</small></div>
+          </div>
+
+          <div class="drivers-layout">
+            <article class="analysis-panel delta-panel">
+              <header class="panel-header">
+                <div><p class="eyebrow">CONTRIBUTION</p><h3>Which categories moved the total?</h3><p>Increases extend right. Reductions extend left.</p></div>
+              </header>
+              <div class="delta-axis"><span>Reduced spend</span><i></i><span>Added spend</span></div>
+              <div id="deltaChart" class="delta-chart"></div>
+            </article>
+
+            <article class="analysis-panel driver-map-panel">
+              <header class="panel-header">
+                <div><p class="eyebrow">SHARE OF SPEND</p><h3>Current period footprint</h3><p>Area and labels show contribution to total spend.</p></div>
+              </header>
+              <div id="driverMap" class="driver-map"></div>
+            </article>
+          </div>
+
+          <article class="analysis-panel matrix-panel">
+            <header class="panel-header matrix-header">
+              <div><p class="eyebrow">DRILL PATH</p><h3>Category → subcategory → merchant</h3><p>Select a row to reveal one level deeper and inspect its evidence.</p></div>
+              <button id="clearDriver" class="quiet-button" type="button">Reset drill path</button>
+            </header>
+            <div class="matrix-table-wrap">
+              <div class="matrix-head"><span>Driver</span><span>Current</span><span>Comparison</span><span>Change</span><span>Share</span><span>Transactions</span></div>
+              <div id="driverMatrix" class="driver-matrix"></div>
+            </div>
+          </article>
+
+          <article id="driverEvidencePanel" class="analysis-panel evidence-panel">
+            <header class="panel-header">
+              <div><p class="eyebrow">SUPPORTING EVIDENCE</p><h3 id="driverEvidenceTitle">Largest driver</h3><p id="driverEvidenceScope">Transactions matching the selected path.</p></div>
+              <button id="openLedger" class="quiet-button" type="button">Open full ledger</button>
+            </header>
+            <div id="driverEvidence" class="evidence-list"></div>
+          </article>
+        </section>
+
+        <section class="view" data-view-panel="commitments" aria-labelledby="commitmentsTitle" hidden>
+          <div class="view-heading">
+            <div><p class="eyebrow">FORWARD VIEW</p><h2 id="commitmentsTitle" class="sr-only">What is already committed?</h2><p>Recurring items remain separate from recorded spending.</p></div>
+            <div class="driver-total"><span>12-MONTH COMMITMENT</span><b id="annualCommitment">—</b><small id="monthlyCommitment">— monthly equivalent</small></div>
+          </div>
+
+          <div class="commitments-layout">
+            <article class="analysis-panel commitment-chart-panel">
+              <header class="panel-header">
+                <div><p class="eyebrow">RUN RATE</p><h3>Annualized recurring cost by category</h3><p>Normalized monthly values reveal the true annual load.</p></div>
+              </header>
+              <div id="commitmentChart" class="commitment-chart"></div>
+            </article>
+
+            <article class="analysis-panel calendar-panel">
+              <header class="panel-header">
+                <div><p class="eyebrow">NEXT PAYMENTS</p><h3>Commitment calendar</h3><p>Upcoming dates and expected charge sizes.</p></div>
+              </header>
+              <div id="upcomingTimeline" class="upcoming-timeline"></div>
+            </article>
+          </div>
+
+          <article class="analysis-panel commitments-table-panel">
+            <header class="panel-header"><div><p class="eyebrow">COMMITMENT REGISTER</p><h3>Recurring services</h3><p>Each line shows its monthly equivalent and annual cost.</p></div></header>
+            <div id="commitmentRegister" class="commitment-register"></div>
+          </article>
+
+          <article id="cashPanel" class="analysis-panel cash-panel" hidden>
+            <header class="panel-header"><div><p class="eyebrow">GUARDED WRITE</p><h3>Log an offline cash expense</h3><p>A local write token is required; unknown merchants enter review.</p></div></header>
+            <form id="cashForm">
+              <label><span>Amount</span><input name="amount" type="number" min="0.01" step="0.01" required></label>
+              <label><span>Date</span><input id="cashDate" name="date" type="date" required></label>
+              <label><span>Merchant</span><input name="merchant" required></label>
+              <label><span>Category (optional)</span><select id="cashCategory" name="category"><option value="">Auto-classify</option></select></label>
+              <label><span>Subcategory (optional)</span><select id="cashSubcategory" name="subcategory"><option value="">Auto-classify</option></select></label>
+              <label><span>Notes (optional)</span><input name="notes" autocomplete="off"></label>
+              <label><span>Local write token</span><input name="token" type="password" autocomplete="off" required></label>
+              <button type="submit">Add expense</button>
+              <p id="cashStatus"></p>
+            </form>
+          </article>
+        </section>
+
+        <section class="view" data-view-panel="ledger" aria-labelledby="ledgerTitle" hidden>
+          <div class="view-heading">
+            <div><p class="eyebrow">TRANSACTION EVIDENCE</p><h2 id="ledgerTitle" class="sr-only">Which entries support the analysis?</h2><p>Filters and charts resolve to these confirmed ledger rows.</p></div>
+            <label class="search-field"><span>SEARCH EVIDENCE</span><input id="transactionSearch" type="search" placeholder="Merchant, category, source"></label>
+          </div>
+          <section class="evidence-summary" aria-label="Evidence summary">
+            <article><span>FILTERED SPEND</span><strong id="evidenceSpend">—</strong><small id="evidenceScopeSummary">Current scope</small></article>
+            <article><span>CONFIRMED ROWS</span><strong id="evidenceRows">—</strong><small>Supporting transactions</small></article>
+            <article><span>LEADING MERCHANT</span><strong id="evidenceMerchant">—</strong><small id="evidenceMerchantSpend">—</small></article>
+          </section>
+          <article class="analysis-panel ledger-panel">
+            <div class="ledger-table-wrap">
+              <table>
+                <thead><tr><th>Date</th><th>Merchant</th><th>Category path</th><th>Source</th><th class="number">Amount</th></tr></thead>
+                <tbody id="transactionTable"></tbody>
+              </table>
+            </div>
+            <div id="mobileTransactions" class="mobile-transactions"></div>
+          </article>
+        </section>
+      </main>
+
+      <footer>
+        <span>Moneta derives insights from a local SQLite mirror. Google Sheets remains the ledger of truth.</span>
+        <span id="fxDisclosure">Amounts shown in the ledger currency.</span>
+      </footer>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

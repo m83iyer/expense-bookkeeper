@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!--
+    com.expense-bookkeeper.recurring — daily check, posts due RECURRING rows to EXPENSES.
+    Replace {USER} and {VENV_PYTHON} below before installing.
+    Save as: ~/Library/LaunchAgents/com.expense-bookkeeper.recurring.plist
+    Load:    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.expense-bookkeeper.recurring.plist
+  -->
+  <key>Label</key>
+  <string>com.expense-bookkeeper.recurring</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>{VENV_PYTHON}</string>
+    <string>/Users/{USER}/.expense-bookkeeper/skill/scripts/recurring_writer.py</string>
+    <string>--config</string>
+    <string>/Users/{USER}/.expense-bookkeeper/config.yaml</string>
+  </array>
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>3</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>StandardOutPath</key>
+  <string>/Users/{USER}/.expense-bookkeeper/logs/recurring_stdout.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/{USER}/.expense-bookkeeper/logs/recurring_stderr.log</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>TZ</key>
+    <string>Asia/Dubai</string>
+  </dict>
+</dict>
+</plist>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!--
+    com.expense-bookkeeper.weekly-digest — Mon 09:00 user-local. Renders the
+    last 7 days as a markdown digest, queues it for the confirmation adapter.
+    Replace {USER} and {VENV_PYTHON} before installing.
+    Save as: ~/Library/LaunchAgents/com.expense-bookkeeper.weekly-digest.plist
+    Load:    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.expense-bookkeeper.weekly-digest.plist
+  -->
+  <key>Label</key>
+  <string>com.expense-bookkeeper.weekly-digest</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>{VENV_PYTHON}</string>
+    <string>/Users/{USER}/.expense-bookkeeper/skill/scripts/weekly_digest.py</string>
+    <string>--config</string>
+    <string>/Users/{USER}/.expense-bookkeeper/config.yaml</string>
+  </array>
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>1</integer>
+    <key>Hour</key>
+    <integer>9</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>StandardOutPath</key>
+  <string>/Users/{USER}/.expense-bookkeeper/logs/weekly_digest_stdout.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/{USER}/.expense-bookkeeper/logs/weekly_digest_stderr.log</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>TZ</key>
+    <string>Asia/Dubai</string>
+  </dict>
+</dict>
+</plist>

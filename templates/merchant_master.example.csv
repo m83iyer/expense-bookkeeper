@@ -1,0 +1,7 @@
+Merchant_Keyword,Merchant_Clean,Category,Subcategory,Aliases,Last_Updated
+Amazon,Amazon,Shopping,Online Retail,AMZN|amazon.ae|amazon.com,2026-04-29
+Carrefour,Carrefour,Groceries,Supermarket,carrefour-moe|carrefour-mall,2026-04-29
+Starbucks,Starbucks,Dining,Cafe,STARBUCKS COFFEE,2026-04-29
+Uber,Uber,Transport,Ride-Hailing,uber-eats,2026-04-29
+Netflix,Netflix,Subscriptions,Streaming,,2026-04-29
+DEWA,DEWA,Utilities,Electricity & Water,,2026-04-29

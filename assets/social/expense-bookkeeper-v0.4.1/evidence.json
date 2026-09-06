@@ -1,0 +1,55 @@
+{
+  "capture_review": {
+    "input": "AED 155.40 spent on ExampleCard at XYZ123 UNKNOWN on 19/04/2026",
+    "privacy": {
+      "credentials_accessed": false,
+      "live_ledger_write": false,
+      "personal_data": false,
+      "synthetic_only": true
+    },
+    "result": {
+      "amount": 155.4,
+      "category": "Misc",
+      "currency": "AED",
+      "ledger_row_field_count": 18,
+      "merchant": "XYZ123 UNKNOWN",
+      "review_reason": "Unknown merchant — skill asked instead of guessing",
+      "review_required": true,
+      "row_retained": true,
+      "status": "Review",
+      "subcategory": "Other"
+    }
+  },
+  "merchant_learning": {
+    "explicit_correction": {
+      "action": "learned",
+      "category": "Dining",
+      "merchant": "Corner Cafe",
+      "subcategory": "Cafe"
+    },
+    "guardrails": {
+      "auto_promotion": false,
+      "conflict_action": "proposal_created",
+      "conflict_requires_approval": true,
+      "mapping_unchanged_before_approval": true,
+      "rollback_action": "rolled_back",
+      "rollback_available": true
+    },
+    "next_variant": {
+      "category": "Dining",
+      "input": "CORNER CAFE DOWNTOWN",
+      "matched_rule": "corner cafe",
+      "resolved": true,
+      "subcategory": "Cafe"
+    },
+    "privacy": {
+      "credentials_accessed": false,
+      "live_ledger_write": false,
+      "personal_data": false,
+      "synthetic_temp_state": true
+    }
+  },
+  "schema_version": 1,
+  "source_commit": "2e69db9ffd7937a04cf1e6786e6b7c1dcb46801a",
+  "source_repository": "https://github.com/m83iyer/expense-bookkeeper"
+}

@@ -1,0 +1,39 @@
+{
+  "assets": [
+    {
+      "alt_text": "Synthetic Expense Bookkeeper evidence card showing an AED 155.40 ExampleCard alert for XYZ123 UNKNOWN parsed into a retained review row. The visible result is category Misc, subcategory Other, status Review, with no personal data and no live ledger write.",
+      "height": 2000,
+      "id": "card-a-capture-review",
+      "image": "card-a-capture-review.png",
+      "image_sha256": "e25a6f475c2384cdd8f0c792ff2f9a1ca08b917d63c052de5093f2a06ee8565b",
+      "source": "source/card-a-capture-review.svg",
+      "source_sha256": "3735e84f320bbbff597ccafb50ac006140cbe15ef172c97c89d537c5f8cf30a2",
+      "width": 1600
+    },
+    {
+      "alt_text": "Synthetic Expense Bookkeeper evidence card showing Corner Cafe explicitly taught as Dining and Cafe, then CORNER CAFE DOWNTOWN resolved to the same local rule. Guardrails show auto-promotion off, conflicts requiring approval, rollback available, no live data, and no live ledger write.",
+      "height": 2000,
+      "id": "card-b-merchant-learning",
+      "image": "card-b-merchant-learning.png",
+      "image_sha256": "9ab7afbfe5bb59683ab02ef074173a7f9bc953ad380a0727ac150a1d99622d14",
+      "source": "source/card-b-merchant-learning.svg",
+      "source_sha256": "58f773b60212f1573fad7ea830f716926fd6f9ea5349afaba172c8ca895c8b81",
+      "width": 1600
+    }
+  ],
+  "design_system": "stockcentric-artifact-v1",
+  "evidence_file": "evidence.json",
+  "evidence_sha256": "96c38fad6fff7d387d95c2dfba404430a5c43fc46f8ff6de1d23f5dc73807962",
+  "privacy_boundary": "Deterministic synthetic inputs and SSD temporary state only. No live ledger, credential, relay, personal identifier, or ~/.expense-tracker state was read or changed.",
+  "release": "expense-bookkeeper-v0.4.1-evidence-cards",
+  "render": {
+    "format": "PNG",
+    "height": 2000,
+    "local_repeat_sha_match": true,
+    "renderer": "rsvg-convert",
+    "width": 1600
+  },
+  "schema_version": 1,
+  "source_commit": "2e69db9ffd7937a04cf1e6786e6b7c1dcb46801a",
+  "source_repository": "https://github.com/m83iyer/expense-bookkeeper"
+}

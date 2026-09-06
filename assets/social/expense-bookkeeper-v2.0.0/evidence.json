@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "reviewed_at": "2026-08-31T05:33:04Z",
+  "source_commit": "7cb3ad31a6353016ec16e5b7745710f03fe2a389",
+  "cloud_release_gate": {
+    "run_id": 33360747571,
+    "status": "success",
+    "python_versions": ["3.10", "3.12", "3.14"],
+    "test_count": 151,
+    "privacy_and_history_scan": "passed",
+    "dependency_audit": "passed",
+    "browser_capture": "passed"
+  },
+  "human_visual_decision": {
+    "approved": [
+      "01-overview-usd.png",
+      "03-root-cause-aed.png",
+      "04-commitments-eur.png",
+      "05-evidence-gbp.png"
+    ],
+    "rejected": ["02-drivers-inr.png"],
+    "rejection_reason": "The broader Drivers capture showed inconsistent headline framing in headless Chromium and was excluded despite the deterministic browser job passing."
+  },
+  "claim_boundary": "The images demonstrate deterministic synthetic dashboard behavior. They do not claim a live ledger write, live FX quote, WhatsApp delivery, or financial advice."
+}

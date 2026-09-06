@@ -1,0 +1,115 @@
+# expense-bookkeeper · example config
+# Copy to ~/.expense-bookkeeper/config.yaml and edit before first run.
+# The setup wizard generates this file for you; this template documents every key.
+
+# Locale — adapt these to your country before running setup.
+# The values below are UAE examples. Replace them with your own:
+#   currency_default: AED     # UAE · change to SGD, INR, GBP, USD, EUR, AUD, etc.
+#   timezone: Asia/Dubai      # change to your timezone (e.g. Asia/Kolkata, Europe/London)
+#   locale_country: AE        # ISO 3166-1 alpha-2 country code (GB, US, IN, SG, DE, AU, …)
+
+mode: "Set up a new tracker"
+armed: false                      # flip to true only after validate_install passes
+armed_at: ""
+
+locale:
+  # All four values come from the user at setup (step 3b). No defaults are
+  # silently inherited — the wizard refuses to proceed if you don't answer.
+  # Example values shown (UAE); replace with your own before running setup.
+  country: AE                     # ISO 3166 alpha-2 — e.g. GB, US, IN, SG, DE, AU
+  timezone: Asia/Dubai            # IANA tz — e.g. Asia/Kolkata, Europe/London, America/New_York
+  default_currency: AED           # ISO 4217 — e.g. GBP, USD, INR, SGD, EUR, AUD
+  date_formats:
+    - "%Y-%m-%d"                  # ISO — first entry is your primary
+    - "%d/%m/%Y"                  # UK/EU
+    - "%m/%d/%Y"                  # US
+  amount_formats:
+    decimal_separator: "."
+    thousands_separator: ","
+
+# Captured at setup step 2b — used only for sharing newly-provisioned sheets
+# back to your Google Drive. If you bring an existing sheet, this
+# is informational only.
+user:
+  user_email: ""                  # your Google email
+
+sheet:
+  service_account_path: ~/.expense-bookkeeper/google-service-account.json
+  service_account_email: ""       # auto-populated from the JSON; backend writer identity
+  user_email: ""                  # your Google email — for sharing fresh sheets
+  id: ""                          # set by setup_wizard.py or paste from URL
+  expenses_tab: EXPENSES
+  merchant_tab: MERCHANT_MASTER
+  categories_tab: CATEGORIES
+  review_tab: REVIEW_QUEUE
+  reconciliation_tab: RECONCILIATION
+  recurring_tab: RECURRING
+  test_tab: EXPENSES_TEST
+
+statements:
+  path: ~/.expense-bookkeeper/statements/
+
+categorization:
+  confidence_threshold: 0.75
+  fail_closed: true
+  history_intelligence: true       # reuse confirmed rows from the local SQLite mirror
+  # Optional evidence helper for an external review flow. The shared capture
+  # path does not call it or approve categories from search results.
+  web_enrichment: never           # keep disabled unless you wire the extension
+  web_enrichment_provider: none   # none | google_pse
+  web_enrichment_api_key: ""      # only if a user-owned extension uses google_pse
+  web_enrichment_cx: ""
+  adaptive:
+    enabled: true
+    state_path: ~/.expense-bookkeeper/state/adaptive_categories.json
+    auto_promote_repeated: false  # confirmed corrections learn now; prediction promotion is opt-in
+    minimum_observations: 3
+    minimum_confidence: 0.90
+
+capture:
+  adapter: ios_mac_local       # see references/adapter-matrix.md
+  phone: iPhone
+  always_on: Mac
+  banks_email: "Yes — fallback only"
+
+# Optional local-first analytics dashboard. Its SQLite database is a derived
+# cache, never the source of truth. Bind to 127.0.0.1 by default; use
+# --host 0.0.0.0 only on a trusted private network for phone/tablet access.
+dashboard:
+  database_path: ~/.expense-bookkeeper/state/dashboard.sqlite3
+  # Reference rates are cached locally. Refresh them explicitly with:
+  # python3 cli.py dashboard-fx-refresh
+  # Only the five currency codes are sent to the rate provider; no ledger data leaves the machine.
+  fx_rates_path: ~/.expense-bookkeeper/state/dashboard_fx_rates.json
+  allow_cash_entry: false         # read-only until explicitly enabled
+  allow_lan_writes: false         # keep false unless mobile cash capture is required
+
+confirmation:
+  adapter: telegram_bot           # whatsapp_hermes | telegram_bot | email_confirm | none
+  confirmations: terse            # terse | verbose | silent
+
+# Optional adapter-specific config blocks (only the ones you use):
+
+telegram:
+  bot_token_env: EXPENSE_BOOKKEEPER_TG_TOKEN
+  chat_id: ""
+  poll_interval_seconds: 30
+
+hermes:
+  target_env: EXPENSE_BOOKKEEPER_HERMES_TARGET  # e.g. whatsapp or whatsapp:<chat-id>
+  include_merchant: false         # hides merchant names from outbound messages by default
+  state_dir: ~/.expense-bookkeeper/state/hermes
+
+email:
+  smtp_host: smtp.gmail.com
+  smtp_port: 587
+  username: ""
+  password_env: EXPENSE_BOOKKEEPER_SMTP_PASS
+  to: ""
+  mode: per-row
+  label_prefix: "[expense-bookkeeper]"
+
+metadata:
+  skill: expense-bookkeeper
+  version: "2.0.0"
+  setup_at: ""

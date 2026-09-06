@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "inspected_at": "2026-08-31T05:33:04Z",
+  "inspection_mode": "Original 1600 x 900 Chromium PNGs inspected individually",
+  "assets": [
+    {
+      "image": "01-overview-usd.png",
+      "sha256": "4afa85f3d2b46c2a4f0d0ef9a4faddff5203a5ddd29713d066885f1a7e4ad13f",
+      "checks": {"full_canvas_visible": true, "no_clipping_or_overlap": true, "five_second_question_clear": true, "data_labels_readable": true, "synthetic_badge_visible": true, "decision_path_clear": true},
+      "notes": "The question, four KPIs, three findings, trend and category allocation form a single top-down narrative."
+    },
+    {
+      "image": "03-root-cause-aed.png",
+      "sha256": "58c302403b79d0406a106ccea1d42a3e60078bb8a63a0a2cbd70f971f3ac124d",
+      "checks": {"full_canvas_visible": true, "no_clipping_or_overlap": true, "drill_path_clear": true, "amounts_and_shares_readable": true, "supporting_rows_visible": true, "currency_visible": true},
+      "notes": "The hierarchy and two supporting Airbnb rows make the category-to-evidence path explicit in one frame."
+    },
+    {
+      "image": "04-commitments-eur.png",
+      "sha256": "4c2d2a118c4214bf3f8b7f54f0b1bc6087a50a553cef76951dcab58b2afe3a82",
+      "checks": {"full_canvas_visible": true, "no_clipping_or_overlap": true, "five_second_question_clear": true, "annualized_total_readable": true, "category_bars_labelled": true, "dated_payments_readable": true},
+      "notes": "The annual commitment, category mix and dated payment calendar answer one forward-looking question without mixing recorded and future spending."
+    },
+    {
+      "image": "05-evidence-gbp.png",
+      "sha256": "20c4c4e5f36033366b7810ce61f6c887a4d6da076dc20f098b32a4b782105aa0",
+      "checks": {"full_canvas_visible": true, "no_clipping_or_overlap": true, "five_second_question_clear": true, "filter_context_visible": true, "summary_reconciles": true, "ledger_rows_readable": true},
+      "notes": "The Travel filter, totals, leading merchant and six ledger rows give the analysis an auditable endpoint."
+    }
+  ],
+  "rejected_capture": {
+    "image": "02-drivers-inr.png",
+    "reason": "Inconsistent headline framing in headless Chromium; excluded from public assets and X media."
+  }
+}

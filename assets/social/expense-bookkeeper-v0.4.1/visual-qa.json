@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "inspected_at": "2026-07-30T09:22:27Z",
+  "inspection_mode": "original 1600x2000 PNG renders",
+  "design_system": "stockcentric-artifact-v1",
+  "assets": [
+    {
+      "image": "card-a-capture-review.png",
+      "sha256": "e25a6f475c2384cdd8f0c792ff2f9a1ca08b917d63c052de5093f2a06ee8565b",
+      "checks": {
+        "full_canvas_visible": true,
+        "no_clipping_or_overlap": true,
+        "phone_readable_hierarchy": true,
+        "exact_amount_and_merchant_visible": true,
+        "misc_other_review_and_retained_visible": true,
+        "privacy_and_no_live_write_boundary_visible": true,
+        "source_footer_visible": true
+      },
+      "notes": "The input, amount, disposition and retained-row table read in that order. Coral is reserved for the review decision; teal and green identify preserved facts."
+    },
+    {
+      "image": "card-b-merchant-learning.png",
+      "sha256": "9ab7afbfe5bb59683ab02ef074173a7f9bc953ad380a0727ac150a1d99622d14",
+      "checks": {
+        "full_canvas_visible": true,
+        "no_clipping_or_overlap": true,
+        "phone_readable_hierarchy": true,
+        "explicit_correction_and_resolved_variant_visible": true,
+        "auto_promotion_conflict_and_rollback_boundaries_visible": true,
+        "privacy_and_no_live_write_boundary_visible": true,
+        "source_footer_visible": true
+      },
+      "notes": "The correction-to-resolution path is the dominant reading order. Four compact guardrail panels keep the safety conditions visible without competing with the result."
+    }
+  ],
+  "limitations": [
+    "The cards prove deterministic synthetic behavior only; they do not prove a live Google Sheets write, relay delivery or production scheduler state.",
+    "Local repeat renders produced identical PNG hashes. A different operating system or font stack may rasterize the committed SVG source differently, so the committed PNG hashes remain the immutable media reference."
+  ],
+  "status": "passed"
+}

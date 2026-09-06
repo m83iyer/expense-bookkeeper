@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<!--
+  Windows Task Scheduler — daily Recurring Writer (03:00 local).
+  Replace {USER} with your Windows username and {PYTHON_EXE} with your python
+  executable path (e.g. C:\Users\{USER}\AppData\Local\Programs\Python\Python311\python.exe).
+
+  Import:
+    schtasks /Create /TN "ExpenseBookkeeper-Recurring" /XML expense-bookkeeper-recurring.xml.example
+  Verify:
+    schtasks /Query /TN "ExpenseBookkeeper-Recurring"
+-->
+<Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Description>expense-bookkeeper · recurring writer · daily 03:00</Description>
+    <Author>{USER}</Author>
+    <URI>\ExpenseBookkeeper-Recurring</URI>
+  </RegistrationInfo>
+  <Triggers>
+    <CalendarTrigger>
+      <StartBoundary>2026-01-01T03:00:00</StartBoundary>
+      <Enabled>true</Enabled>
+      <ScheduleByDay>
+        <DaysInterval>1</DaysInterval>
+      </ScheduleByDay>
+    </CalendarTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <UserId>{USER}</UserId>
+      <LogonType>InteractiveToken</LogonType>
+      <RunLevel>LeastPrivilege</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <Enabled>true</Enabled>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <Command>{PYTHON_EXE}</Command>
+      <Arguments>"C:\Users\{USER}\.expense-bookkeeper\skill\scripts\recurring_writer.py" --config "C:\Users\{USER}\.expense-bookkeeper\config.yaml"</Arguments>
+    </Exec>
+  </Actions>
+</Task>
