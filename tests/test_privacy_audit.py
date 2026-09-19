@@ -20,6 +20,10 @@ def test_allows_documented_placeholders():
     assert scan_text(text, source="sample") == []
 
 
+def test_retina_asset_names_are_not_email_addresses():
+    assert scan_text('"icon_16x16@2x.png"', source="sample") == []
+
+
 def test_scans_tree_and_skips_local_control_metadata(tmp_path):
     (tmp_path / "safe.txt").write_text("owner@example.com", encoding="utf-8")
     (tmp_path / ".git").mkdir()

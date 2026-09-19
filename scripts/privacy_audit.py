@@ -23,7 +23,7 @@ PATTERNS = {
     "google_sheet_url": re.compile(r"https://docs\.google\.com/spreadsheets/d/[A-Za-z0-9_-]{20,}"),
     "absolute_user_path": re.compile(r"/Users/(?!you\b|example\b)[A-Za-z0-9._-]+/"),
     "phone_number": re.compile(r"(?<!\w)\+[1-9](?:[\s()-]*\d){7,14}(?!\w)"),
-    "email": re.compile(r"\b[A-Z0-9._%+-]+@(?!example\.(?:com|org|net)\b)[A-Z0-9.-]+\.[A-Z]{2,}\b", re.I),
+    "email": re.compile(r"\b[A-Z0-9._%+-]+@(?!example\.(?:com|org|net)\b)(?!\d+x\.(?:png|jpe?g|gif|webp)\b)[A-Z0-9.-]+\.[A-Z]{2,}\b", re.I),
     "credential_assignment": re.compile(
         r"(?i)\b(?:api[_-]?key|secret|token|password|client[_-]?secret)\s*[:=]\s*[\"'](?!\s*(?:\$\{|<|your[-_ ]|example|none|null|false|true))[A-Za-z0-9_./+=-]{12,}[\"']"
     ),

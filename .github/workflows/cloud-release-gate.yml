@@ -48,9 +48,65 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  native-macos-build:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Check out the exact candidate
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e7b41d4fa7b7 # v7.0.0
+      - name: Build the Moneta native application
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/moneta-build" "$RUNNER_TEMP/moneta-artifact"
+          swift build \
+            --package-path native/Moneta \
+            --scratch-path "$RUNNER_TEMP/moneta-build" \
+            -c release
+          MONETA_BINARY="$RUNNER_TEMP/moneta-build/release/Moneta" \
+          MONETA_SCRATCH_PATH="$RUNNER_TEMP/moneta-build" \
+            bash native/Moneta/scripts/package_app.sh "$RUNNER_TEMP/moneta-artifact/Moneta.app"
+          bash native/Moneta/scripts/verify_install.sh "$RUNNER_TEMP/moneta-artifact/Moneta.app" || {
+            # The install verifier's live local-ledger probe is intentionally
+            # unavailable on an isolated GitHub runner. Binary, plist and
+            # signature checks are repeated below and are release-blocking.
+            test -x "$RUNNER_TEMP/moneta-artifact/Moneta.app/Contents/MacOS/Moneta"
+            plutil -lint "$RUNNER_TEMP/moneta-artifact/Moneta.app/Contents/Info.plist"
+            codesign --verify --deep --strict "$RUNNER_TEMP/moneta-artifact/Moneta.app"
+          }
+          ditto -c -k --sequesterRsrc --keepParent \
+            "$RUNNER_TEMP/moneta-artifact/Moneta.app" \
+            "$RUNNER_TEMP/moneta-artifact/Moneta.app.zip"
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          root = pathlib.Path(os.environ["RUNNER_TEMP"]) / "moneta-artifact"
+          binary = root / "Moneta.app/Contents/MacOS/Moneta"
+          archive = root / "Moneta.app.zip"
+          (root / "receipt.json").write_text(json.dumps({
+              "schema": "moneta_native_build_v1",
+              "status": "green",
+              "sha": os.environ["GITHUB_SHA"],
+              "binary_sha256": hashlib.sha256(binary.read_bytes()).hexdigest(),
+              "artifact_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+              "platform": "macos-latest",
+          }, indent=2) + "\n")
+          PY
+      - name: Retain exact-SHA native application
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: moneta-native-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/moneta-artifact/Moneta.app.zip
+            ${{ runner.temp }}/moneta-artifact/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
   exact-sha-proof:
-    needs: full-release-validation
+    needs: [full-release-validation, native-macos-build]
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
       actions: read
@@ -60,6 +116,11 @@ jobs:
         with:
           pattern: validation-python-*-${{ github.sha }}
           path: cloud-release-proof/validation
+      - name: Download the native application receipt
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: moneta-native-${{ github.sha }}
+          path: cloud-release-proof/native
       - name: Write exact-SHA proof
         run: |
           python3 - <<'PY'
@@ -92,6 +153,15 @@ jobs:
               path = visual_reports[0].parent / capture["file"]
               if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != capture["sha256"]:
                   raise SystemExit(f"Invalid screenshot proof: {path}")
+          native_receipt_path = pathlib.Path("cloud-release-proof/native/receipt.json")
+          native_receipt = json.loads(native_receipt_path.read_text())
+          native_zip = pathlib.Path("cloud-release-proof/native/Moneta.app.zip")
+          if native_receipt.get("status") != "green" or native_receipt.get("sha") != os.environ["GITHUB_SHA"]:
+              raise SystemExit("Native application receipt does not match the candidate SHA")
+          if not native_zip.is_file():
+              raise SystemExit("Native application artifact is missing")
+          if native_receipt.get("artifact_sha256") != hashlib.sha256(native_zip.read_bytes()).hexdigest():
+              raise SystemExit("Native application artifact hash does not match its receipt")
           pathlib.Path("cloud-release-proof/proof.json").write_text(
               json.dumps({
                   "schema": "expense_bookkeeper_cloud_release_v2",
@@ -101,6 +171,8 @@ jobs:
                   "evidence": evidence,
                   "visual_proof": str(visual_reports[0].relative_to(root)),
                   "public_screenshots": [item["file"] for item in captures],
+                  "native_receipt_sha256": hashlib.sha256(native_receipt_path.read_bytes()).hexdigest(),
+                  "native_artifact_sha256": hashlib.sha256(native_zip.read_bytes()).hexdigest(),
               }, indent=2) + "\n"
           )
           PY

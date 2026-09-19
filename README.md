@@ -85,6 +85,11 @@ Open `http://127.0.0.1:8765`. The server binds to loopback by default. Read
 [dashboard operation](references/dashboard.md) before enabling phone access or
 cash entry.
 
+On macOS, `native/Moneta` provides the optional SwiftUI desktop shell for the
+same local API. Release-gate artifacts include a compiled, ad-hoc-signed
+`Moneta.app`; the application still requires the local dashboard service and
+never embeds ledger data or credentials.
+
 ## Data flow
 
 ```text
@@ -121,6 +126,7 @@ its own suggestion or bypass the active taxonomy.
 
 ```text
 dashboard/             Moneta analytics, FX cache, synthetic demo, and UI
+native/Moneta/         Optional macOS SwiftUI application shell
 scripts/               Capture, classification, reconciliation, and validation
 references/            Architecture, setup, adapters, dashboard, and migration
 templates/             Config, scheduler, ledger, and regional examples
