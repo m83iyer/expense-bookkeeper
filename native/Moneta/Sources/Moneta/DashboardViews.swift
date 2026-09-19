@@ -663,11 +663,11 @@ struct TrendsView: View {
             ? " · prior months are shown for context; headline KPIs remain the selected month"
             : ""
         switch mode {
-        case .actual: "AED spending by month\(coverage)\(context)"
-        case .comparison: "Selected period against \(model.analytics?.meta.comparisonLabel.lowercased() ?? "the comparison")\(coverage)\(context)"
-        case .rollingAverage: "Monthly spend against its trailing three-month average\(coverage)\(context)"
-        case .indexed: "Each month relative to the first visible month (100)\(coverage)\(context)"
-        case .monthlyChange: "Percentage movement from the preceding month\(coverage)\(context)"
+        case .actual: return "AED spending by month\(coverage)\(context)"
+        case .comparison: return "Selected period against \(model.analytics?.meta.comparisonLabel.lowercased() ?? "the comparison")\(coverage)\(context)"
+        case .rollingAverage: return "Monthly spend against its trailing three-month average\(coverage)\(context)"
+        case .indexed: return "Each month relative to the first visible month (100)\(coverage)\(context)"
+        case .monthlyChange: return "Percentage movement from the preceding month\(coverage)\(context)"
         }
     }
 
