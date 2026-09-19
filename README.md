@@ -17,7 +17,6 @@ improve future matching; generic descriptors remain transaction-only. Hermes
 can present the same choices over WhatsApp.
 
 ## What Moneta adds
-
 - One-, three-, six-, and twelve-month analysis windows
 - Honest previous-period and year-over-year comparisons with baseline checks
 - Category → subcategory → merchant root-cause drill-down
@@ -29,7 +28,6 @@ can present the same choices over WhatsApp.
 - A responsive desktop and mobile interface that stays on the local machine
 
 ## Moneta in four questions
-
 | What changed? | What caused it? |
 |---|---|
 | ![Synthetic USD overview with labelled KPIs, findings, trend and category allocation](assets/social/expense-bookkeeper-v2.0.0/01-overview-usd.png) | ![Synthetic AED category-to-merchant drill with supporting transactions](assets/social/expense-bookkeeper-v2.0.0/03-root-cause-aed.png) |
@@ -41,7 +39,6 @@ ledger keeps one reporting currency; the dashboard converts its totals using a
 locally cached reference-rate snapshot.
 
 ## Public scaffold and private installation
-
 This repository is the public reusable product. It contains application code,
 generic templates, tests, and a deterministic synthetic demo—not a personal
 ledger, login, Sheet ID, message target, or credential. A private Moneta
@@ -64,7 +61,6 @@ synthetic exchange rates, and public merchant names. It contains no Sheet ID,
 email address, phone number, credential, or real expense.
 
 ## Install your own tracker
-
 ```bash
 python3 cli.py setup
 python3 cli.py validate --config ~/.expense-bookkeeper/config.yaml
@@ -91,7 +87,6 @@ same local API. Release-gate artifacts include a compiled, ad-hoc-signed
 never embeds ledger data or credentials.
 
 ## Data flow
-
 ```text
 Alert, CSV, or manual entry
   -> parse and duplicate check
@@ -136,7 +131,6 @@ SKILL.md               Optional agent-runtime instructions
 ```
 
 ## Development and release
-
 ```bash
 python3 -m pip install -r requirements.txt -r requirements-dev.txt
 python3 -m pytest tests/ -q
