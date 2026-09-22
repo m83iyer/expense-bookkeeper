@@ -11,7 +11,7 @@ final class AppModel: ObservableObject {
     @Published var health: [String: HealthItem] = [:]
     @Published var selectedMonth = ""
     @Published var selectedMonths: Set<String> = []
-    @Published var rangeMonths = 12
+    @Published var rangeMonths = 1
     @Published var category = ""
     @Published var subcategory = ""
     @Published var merchant = ""
@@ -222,7 +222,7 @@ final class AppModel: ObservableObject {
         if selectedMonths.contains(month) { selectedMonths.remove(month) }
         else { selectedMonths.insert(month) }
         selectedMonth = selectedMonths.sorted { monthKey($0) < monthKey($1) }.last ?? month
-        rangeMonths = selectedMonths.isEmpty ? 12 : 1
+        rangeMonths = 1
         scopeRevision += 1
     }
 
@@ -235,7 +235,7 @@ final class AppModel: ObservableObject {
 
     func clearAllCalendarMonths() {
         selectedMonths = []
-        rangeMonths = 12
+        rangeMonths = 1
         scopeRevision += 1
     }
 
@@ -251,7 +251,7 @@ final class AppModel: ObservableObject {
         if yearMonths.isSubset(of: selectedMonths) { selectedMonths.subtract(yearMonths) }
         else { selectedMonths.formUnion(yearMonths) }
         selectedMonth = selectedMonths.sorted { monthKey($0) < monthKey($1) }.last ?? selectedMonth
-        rangeMonths = selectedMonths.isEmpty ? 12 : 1
+        rangeMonths = 1
         scopeRevision += 1
     }
 
@@ -415,10 +415,11 @@ final class AppModel: ObservableObject {
 
     func resetScope() {
         rememberScope()
+        selectedMonth = analytics?.meta.months.first ?? selectedMonth
         category = ""
         subcategory = ""
         merchant = ""
-        rangeMonths = 12
+        rangeMonths = 1
         selectedMonths = []
         scopeRevision += 1
     }

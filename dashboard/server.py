@@ -183,9 +183,9 @@ class Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/analytics":
                 query = parse_qs(parsed.query)
                 try:
-                    months = int(query.get("range", ["12"])[0])
+                    months = int(query.get("range", ["1"])[0])
                 except ValueError:
-                    months = 12
+                    months = 1
                 return self.json(app.analytics(query.get("month", [""])[0], months,
                                                query.get("category", [""])[0],
                                                query.get("subcategory", [""])[0],

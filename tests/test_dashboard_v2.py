@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import threading
+import urllib.request
+from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 import pytest
@@ -8,7 +11,7 @@ import yaml
 
 from dashboard.demo import DEMO_RATES, demo_commitments, demo_transactions
 from dashboard.fx import write_snapshot
-from dashboard.server import Dashboard
+from dashboard.server import Dashboard, Handler
 from dashboard.sync import build_database
 
 
@@ -40,6 +43,33 @@ def test_three_month_period_has_complete_previous_period_and_driver_tree(tmp_pat
     travel = next(node for node in data["driver_rows"] if node["name"] == "Travel")
     assert {child["name"] for child in travel["children"]} >= {"Accommodation", "Local transport"}
     assert any(leaf["name"] == "Airbnb" for child in travel["children"] for leaf in child["children"])
+
+
+def test_dashboard_defaults_to_current_month_and_keeps_longer_windows_available(tmp_path: Path):
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    server.dashboard = _dashboard(tmp_path)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        base_url = f"http://127.0.0.1:{server.server_port}/api/analytics"
+        with urllib.request.urlopen(base_url, timeout=5) as response:
+            current = json.load(response)
+        with urllib.request.urlopen(f"{base_url}?range=12", timeout=5) as response:
+            annual = json.load(response)
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)
+
+    assert current["meta"]["range_months"] == 1
+    assert current["meta"]["selected_month"] == "Aug-2026"
+    assert annual["meta"]["range_months"] == 12
+
+    app_js = (Path(__file__).resolve().parents[1] / "dashboard/static/app.js").read_text(encoding="utf-8")
+    index_html = (Path(__file__).resolve().parents[1] / "dashboard/static/index.html").read_text(encoding="utf-8")
+    assert 'initial.get("range") || "1"' in app_js
+    assert 'range:"1"' in app_js
+    assert '<option value="1" selected>Current month</option>' in index_html
 
 
 def test_currency_toggle_converts_every_monetary_surface(tmp_path: Path):

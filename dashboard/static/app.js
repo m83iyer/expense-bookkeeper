@@ -13,7 +13,7 @@ const initial = new URLSearchParams(location.search);
 const state = {
   view: viewCopy[initial.get("view")] ? initial.get("view") : "overview",
   month: initial.get("month") || "",
-  range: initial.get("range") || "3",
+  range: initial.get("range") || "1",
   category: initial.get("category") || "",
   subcategory: initial.get("subcategory") || "",
   merchant: initial.get("merchant") || "",
@@ -501,7 +501,7 @@ $("#cashCategory").addEventListener("change", event => {
     "Auto-classify", "");
 });
 $("#resetFilters").addEventListener("click", () => {
-  Object.assign(state, {month:"", range:"3", category:"", subcategory:"", merchant:"", comparison:"previous", selectedDriver:null});
+  Object.assign(state, {month:"", range:"1", category:"", subcategory:"", merchant:"", comparison:"previous", selectedDriver:null});
   state.expandedDrivers.clear();
   loadAll();
 });
