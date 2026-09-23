@@ -195,11 +195,11 @@ private struct HomePeriodBrief: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
-            Text(data.meta.periodLabel.uppercased()).font(.caption.monospaced().weight(.semibold)).foregroundStyle(.white.opacity(0.62))
+            Text(data.meta.periodLabel.uppercased()).font(.caption.monospaced().weight(.semibold)).foregroundStyle(MonetaTheme.onBrand.opacity(0.72))
             Text("You spent")
-                .font(.title2.weight(.medium)).foregroundStyle(.white.opacity(0.82))
+                .font(.title2.weight(.medium)).foregroundStyle(MonetaTheme.onBrand.opacity(0.88))
             Text(data.kpis.period.value.aed)
-                .font(.system(size: 46, weight: .bold, design: .rounded)).monospacedDigit().foregroundStyle(.white)
+                .font(.system(size: 46, weight: .bold, design: .rounded)).monospacedDigit().foregroundStyle(MonetaTheme.onBrand)
             if let change {
                 HStack(spacing: 8) {
                     Image(systemName: change > 0 ? "arrow.up.right" : change < 0 ? "arrow.down.right" : "minus")
@@ -207,7 +207,7 @@ private struct HomePeriodBrief: View {
                 }
                 .font(.headline).foregroundStyle(changeColor)
             }
-            Divider().overlay(.white.opacity(0.14))
+            Divider().overlay(MonetaTheme.onBrand.opacity(0.22))
             HStack(spacing: 28) {
                 briefMetric("Monthly pace", data.kpis.monthlyAverage.value.aed)
                 briefMetric("Transactions", data.kpis.transactions.formatted())
@@ -216,13 +216,13 @@ private struct HomePeriodBrief: View {
         }
         .padding(24)
         .frame(maxWidth: .infinity, minHeight: 260, alignment: .leading)
-        .background(MonetaTheme.forest, in: RoundedRectangle(cornerRadius: 20))
+        .background(MonetaTheme.brandFill, in: RoundedRectangle(cornerRadius: 20))
     }
 
     private func briefMetric(_ label: String, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 3) {
-            Text(label.uppercased()).font(.caption2.monospaced()).foregroundStyle(.white.opacity(0.55))
-            Text(value).font(.title3.bold().monospacedDigit()).foregroundStyle(.white)
+            Text(label.uppercased()).font(.caption2.monospaced()).foregroundStyle(MonetaTheme.onBrand.opacity(0.70))
+            Text(value).font(.title3.bold().monospacedDigit()).foregroundStyle(MonetaTheme.onBrand)
         }
     }
 }
@@ -888,13 +888,7 @@ private struct DriverDial: View {
     @State private var previewNodeID: String?
 
     private let residualTargetPercent = 1.0
-    private let palette: [Color] = [
-        MonetaTheme.amber, MonetaTheme.forest, MonetaTheme.teal, MonetaTheme.coral,
-        .blue.opacity(0.78), .purple.opacity(0.72), .cyan.opacity(0.72), .indigo.opacity(0.72),
-        .pink.opacity(0.68), .mint.opacity(0.82), .brown.opacity(0.72), .orange.opacity(0.74),
-        Color(red: 0.34, green: 0.48, blue: 0.35), Color(red: 0.47, green: 0.40, blue: 0.58),
-        Color(red: 0.38, green: 0.55, blue: 0.62), Color(red: 0.62, green: 0.46, blue: 0.34),
-    ]
+    private let palette = MonetaTheme.chartPalette
     private var positiveNodes: [DriverNode] { nodes.filter { $0.current > 0 }.sorted { $0.current > $1.current } }
     private var shownNodes: [DriverNode] {
         let denominator = max(summary.current, 0.01)
@@ -1185,7 +1179,7 @@ private struct DriverQuickRead: View {
                     Text("\(selected.delta >= 0 ? "Up" : "Down") \(abs(selected.delta).aed) versus the comparison, across \(selected.transactions) transactions.")
                         .font(.callout).foregroundStyle(.secondary)
                     Button(drillLabel(selected), systemImage: "arrow.down.right.circle.fill") { onDrill(selected) }
-                        .buttonStyle(.borderedProminent).tint(MonetaTheme.forest).controlSize(.large)
+                        .buttonStyle(.borderedProminent).tint(MonetaTheme.brandFill).controlSize(.large)
                 } else {
                     if let increase = biggestIncrease {
                         signal("Largest increase", increase.name, increase.delta.aed, MonetaTheme.coral)
@@ -1456,7 +1450,7 @@ private struct DriverHierarchyNavigator: View {
         if let selected {
             Button(drillLabel(selected), systemImage: selected.level == "merchant" ? "list.bullet.rectangle" : "arrow.down.right") { onDrill(selected) }
                 .buttonStyle(.borderedProminent)
-                .tint(MonetaTheme.forest)
+                .tint(MonetaTheme.brandFill)
                 .controlSize(.large)
                 .frame(minHeight: 44)
         }
@@ -1629,7 +1623,7 @@ struct CommitmentsView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         ScopeHeader(title: "Commitments", subtitle: "Planned cash obligations, shown at monthly level")
-                        Button("Log cash expense", systemImage: "plus.circle.fill") { showCashEntry = true }.buttonStyle(.borderedProminent).tint(MonetaTheme.forest)
+                        Button("Log cash expense", systemImage: "plus.circle.fill") { showCashEntry = true }.buttonStyle(.borderedProminent).tint(MonetaTheme.brandFill)
                     }
                     HStack(spacing: 12) {
                         CountTile(title: "Monthly equivalent", value: data.monthlyEquivalent.aed, supporting: "Normalized monthly view")
@@ -1695,7 +1689,7 @@ struct CommitmentEditView: View {
                 Spacer()
                 Button("Cancel") { isPresented = false }
                 Button(isSaving ? "Saving…" : "Save changes") { save() }
-                    .buttonStyle(.borderedProminent).tint(MonetaTheme.forest)
+                    .buttonStyle(.borderedProminent).tint(MonetaTheme.brandFill)
                     .disabled(isSaving || (Double(monthlyAmount) ?? 0) <= 0)
             }
         }
@@ -1750,7 +1744,7 @@ struct CashEntryView: View {
                 TextField("Optional note", text: $notes)
             }
             Text(status).font(.caption).foregroundStyle(.secondary)
-            HStack { Spacer(); Button("Cancel") { isPresented = false }; Button(isSaving ? "Saving…" : "Add expense") { save() }.buttonStyle(.borderedProminent).tint(MonetaTheme.forest).disabled(isSaving || Double(amount) == nil || merchant.trimmingCharacters(in: .whitespaces).isEmpty) }
+            HStack { Spacer(); Button("Cancel") { isPresented = false }; Button(isSaving ? "Saving…" : "Add expense") { save() }.buttonStyle(.borderedProminent).tint(MonetaTheme.brandFill).disabled(isSaving || Double(amount) == nil || merchant.trimmingCharacters(in: .whitespaces).isEmpty) }
         }
         .padding(24)
         .frame(width: 520)
